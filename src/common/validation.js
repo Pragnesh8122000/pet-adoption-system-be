@@ -19,7 +19,7 @@ const commonNumberSchema = (fieldName) => Joi.number().min(1).max(30).required()
     'string.empty': nonEmptyMessage(fieldName),
 });
 const emailSchema = Joi.string().email().required();
-const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required();
+const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9@.]{3,30}$')).required();
 const phoneSchema = Joi.string().pattern(new RegExp('^[0-9]{10}$')).required();
 
 // JWT Validations
@@ -65,4 +65,9 @@ export const updatePetValidation = Joi.object({
 
 export const idValidation = Joi.object({
     id : commonTextSchema("id"),
+});
+
+export const updateAdoptionStatusValidation = Joi.object({
+    id : commonTextSchema("id"),
+    status: commonTextSchema("status")
 });

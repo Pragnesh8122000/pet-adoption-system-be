@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "../config/database.js";
 import authRoutes from "./v1/routes/authRoutes.js";
 import petRoutes from "./v1/routes/petRoutes.js";
+import adoptionRoutes from "./v1/routes/adoptionRoutes.js";
 dotenv.config();
 /**
  * Initializes and configures an Express application, setting up middleware for CORS, JSON parsing,
@@ -26,6 +27,7 @@ async function server() {
         // loading routes for v1
         app.use("/petAdoptionApis/v1", authRoutes);
         app.use("/petAdoptionApis/v1", petRoutes);
+        app.use("/petAdoptionApis/v1", adoptionRoutes);
         
         return app;
     } catch (error) {

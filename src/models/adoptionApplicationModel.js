@@ -4,12 +4,12 @@ const { Schema } = mongoose;
 
 const adoptionApplicationSchema = new Schema({
     userId: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
         index: true
     },
     petId: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
         index: true
     },
@@ -20,10 +20,6 @@ const adoptionApplicationSchema = new Schema({
         required: true
     }
 }, { timestamps: true, versionKey: false });
-
-// adoptionApplicationSchema.index(
-//     { userId: 1, petId: 1 },
-// );
 
 const AdoptionApplication = mongoose.model('AdoptionApplication', adoptionApplicationSchema);
 export default AdoptionApplication;
