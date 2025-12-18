@@ -87,7 +87,6 @@ export const updateAdoptionStatus = async (req, res) => {
 
         res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet status updated successfully" });
     } catch (error) {
-        console.log(error)
         res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
@@ -168,7 +167,6 @@ export const getUsersAdoptionApplications = async (req, res) => {
             }
         });
     } catch (error) {
-        console.log(error)
         res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
@@ -240,7 +238,6 @@ export const getAllAdoptionApplications = async (req, res) => {
             }
         });
     } catch (error) {
-        console.log(error)
         res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
