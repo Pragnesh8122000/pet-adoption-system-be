@@ -4,7 +4,7 @@ The backend service for the Pet Adoption System, built with Node.js, Express, an
 
 ## Prerequisites
 
-- Node.js (v20.17.0 recommended)
+- Node.js (v24.12.0 recommended)
 - MongoDB
 
 ## Installation
