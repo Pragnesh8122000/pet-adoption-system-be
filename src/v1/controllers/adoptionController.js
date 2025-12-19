@@ -37,9 +37,9 @@ export const adoptPet = async (req, res) => {
             petId: id,
         })
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet updated successfully" });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet updated successfully" });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -85,9 +85,9 @@ export const updateAdoptionStatus = async (req, res) => {
             status: newPetStatus
         });
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet status updated successfully" });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet status updated successfully" });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -97,7 +97,7 @@ export const getUsersAdoptionApplications = async (req, res) => {
         let {
             page = 1,
             limit = 10,
-        } = req.body;
+        } = req.query;
 
         const skip = (page - 1) * limit;
 
@@ -141,8 +141,10 @@ export const getUsersAdoptionApplications = async (req, res) => {
                     userId: 1,
                     petId: 1,
                     status: 1,
+                    createdAt: 1,
                     userName: "$user.name",
                     petName: "$pet.name",
+                    petBreed: "$pet.breed",
                 }
             },
             {
@@ -157,9 +159,9 @@ export const getUsersAdoptionApplications = async (req, res) => {
         const remainingCount = totalCount - adoptionApplications.length;
         const totalPages = Math.ceil(totalCount / limit);
 
-        res.status(HTTP_STATUS.OK).json({
+        return res.status(HTTP_STATUS.OK).json({
             status: RES_STATUS.SUCCESS, message: "Pets list fetched successfully", data: {
-                adoptionApplications: adoptionApplications,
+                result: adoptionApplications,
                 totalPages,
                 currentPage: page,
                 totalCount,
@@ -167,7 +169,7 @@ export const getUsersAdoptionApplications = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -177,7 +179,7 @@ export const getAllAdoptionApplications = async (req, res) => {
         let {
             page = 1,
             limit = 10,
-        } = req.body;
+        } = req.query;
 
         const skip = (page - 1) * limit;
 
@@ -217,6 +219,9 @@ export const getAllAdoptionApplications = async (req, res) => {
                     status: 1,
                     userName: "$user.name",
                     petName: "$pet.name",
+                    petBreed: "$pet.breed",
+                    petName: "$pet.name",
+                    userEmail: "$pet.name",
                 }
             },
             { $skip: skip },
@@ -228,9 +233,9 @@ export const getAllAdoptionApplications = async (req, res) => {
         const remainingCount = totalCount - adoptionApplications.length;
         const totalPages = Math.ceil(totalCount / limit);
 
-        res.status(HTTP_STATUS.OK).json({
+        return res.status(HTTP_STATUS.OK).json({
             status: RES_STATUS.SUCCESS, message: "Pets list fetched successfully", data: {
-                adoptionApplications: adoptionApplications,
+                result: adoptionApplications,
                 totalPages,
                 currentPage: page,
                 totalCount,
@@ -238,6 +243,6 @@ export const getAllAdoptionApplications = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }

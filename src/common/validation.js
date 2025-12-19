@@ -19,7 +19,7 @@ const commonNumberSchema = (fieldName) => Joi.number().min(1).max(30).required()
     'string.empty': nonEmptyMessage(fieldName),
 });
 const emailSchema = Joi.string().email().required();
-const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9@.]{3,30}$')).required();
+const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9@.-_!$&]{3,30}$')).required();
 const phoneSchema = Joi.string().pattern(new RegExp('^[0-9]{10}$')).required();
 
 // JWT Validations
@@ -30,10 +30,10 @@ export const registerUserValidation = Joi.object({
         'any.required': requiredMessage('email'),
     }),
     password: passwordSchema.messages({
-        'string.pattern.base': `${minLengthMessage('password', 3)} and ${maxLengthMessage('password', 30)}`,
+        'string.pattern.base': `Password must be between 3 and 30 characters.`,
         'any.required': requiredMessage('password'),
     }),
-    phone: phoneSchema.messages({
+    phoneNumber: phoneSchema.messages({
         'string.pattern.base': invalidPatternMessage('phone', '10 digit number'),
         'any.required': requiredMessage('phone'),
     }),

@@ -49,7 +49,7 @@ export const registerUser = async (req, res) => {
         if (isValid.error) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: isValid.error.details[0].message });
         }
-        const { name, email, phone, password } = req.body;
+        const { name, email, phoneNumber, password } = req.body;
 
         const isEmailExist = await User.countDocuments({ status: true, email });
 
@@ -57,7 +57,7 @@ export const registerUser = async (req, res) => {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Email already exist" });
         }
 
-        const isPhoneNumberExist = await User.countDocuments({ status: true, phone });
+        const isPhoneNumberExist = await User.countDocuments({ status: true, phone: phoneNumber });
 
         if (isPhoneNumberExist) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Phone already exist" });
@@ -68,13 +68,13 @@ export const registerUser = async (req, res) => {
         await User.create({
             name,
             email,
-            phone,
+            phone: phoneNumber,
             password: hashedPassword
         });
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "User registered successfully", data: { user: { name, email, phone } } });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "User registered successfully", data: { user: { name, email, phone: phoneNumber } } });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -94,12 +94,12 @@ export const fetchUserDetails = async (req, res) => {
         const userId = Types.ObjectId.createFromHexString(id);
 
         const user = await User.findOne({ _id: userId, deletedAt: null }, { name: 1, email: 1, phone: 1, role: 1, status: 1 });
-        res.status(HTTP_STATUS.OK).json({
+        return res.status(HTTP_STATUS.OK).json({
             status: RES_STATUS.SUCCESS, message: "user details fetched successfully", data: {
                 user,
             }
         });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }

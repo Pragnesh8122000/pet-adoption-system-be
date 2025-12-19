@@ -7,18 +7,18 @@ export const authenticateToken = async (req, res, next) => {
         const token = req.headers["token"];
 
         if (!token || typeof token !== "string") {
-            res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid token passed" });
+            return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid token passed" });
         }
         let decodedPayload;
 
         try {
             decodedPayload = jwt.verify(token, process.env.JWT_SECRET);
         } catch (error) {
-            res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Please login again" });
+            return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Please login again" });
         }
 
         if (!decodedPayload) {
-            res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid token passed" });
+            return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid token passed" });
         }
 
         const { id } = decodedPayload;
@@ -30,7 +30,7 @@ export const authenticateToken = async (req, res, next) => {
         next();
 
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.SERVER_ERROR, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.SERVER_ERROR, message: "Internal Server Error" });
     }
 }
 

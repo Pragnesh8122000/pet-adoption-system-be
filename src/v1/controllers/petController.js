@@ -23,9 +23,9 @@ export const createPets = async (req, res) => {
             age,
         });
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet created successfully" });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet created successfully" });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -56,9 +56,9 @@ export const updatePets = async (req, res) => {
             age,
         });
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet updated successfully" });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet updated successfully" });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -83,9 +83,9 @@ export const deletePet = async (req, res) => {
             deletedAt: new Date()
         });
 
-        res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet deleted successfully" });
+        return res.status(HTTP_STATUS.OK).json({ status: RES_STATUS.SUCCESS, message: "Pet deleted successfully" });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
@@ -95,17 +95,23 @@ export const getAllPets = async (req, res) => {
         let {
             page = 1,
             limit = 10,
-            name = "",
+            search = "",
             breed = "",
             age = "",
-        } = req.body;
+        } = req.query;
 
-        const skip = (page - 1) * limit;
+        limit = Number(limit);
+        page = Number(page);
+
+        const skip = (Number(page) - 1) * Number(limit);
 
         const filter = { deletedAt: null };
 
-        if (name) {
-            filter.name = { $regex: name, $options: "i" };
+        if (search) {
+            filter.$or = [
+                { name: { $regex: search, $options: "i" } },
+                { breed: { $regex: search, $options: "i" } },
+            ];
         }
 
         if (breed) {
@@ -149,7 +155,7 @@ export const getAllPets = async (req, res) => {
         const remainingCount = totalCount - pets.length;
         const totalPages = Math.ceil(totalCount / limit);
 
-        res.status(HTTP_STATUS.OK).json({
+        return res.status(HTTP_STATUS.OK).json({
             status: RES_STATUS.SUCCESS, message: "Pets list fetched successfully", data: {
                 pets,
                 totalPages,
@@ -159,18 +165,18 @@ export const getAllPets = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
 
 export const getPetDetails = async (req, res) => {
     try {
 
-        const isValid = idValidation.validate(req.body);
+        const isValid = idValidation.validate(req.query);
         if (isValid.error) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: isValid.error.details[0].message });
         }
-        const { id } = req.body;
+        const { id } = req.query;
 
         if (!isValidObjectId(id)) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid id passed" });
@@ -197,12 +203,12 @@ export const getPetDetails = async (req, res) => {
             },
             { $limit: 1 },
         ]);
-        res.status(HTTP_STATUS.OK).json({
+        return res.status(HTTP_STATUS.OK).json({
             status: RES_STATUS.SUCCESS, message: "Pets details fetched successfully", data: {
                 pet: pets[0],
             }
         });
     } catch (error) {
-        res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
+        return res.status(HTTP_STATUS.SOMETHING_WENT_WRONG).json({ status: RES_STATUS.FAILURE, message: "Internal Server Error" });
     }
 }
