@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "seed": "node src/scripts/seedAdmin.js",
+    "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
   "author": "Pragnesh Prajapati",

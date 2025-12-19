@@ -64,11 +64,11 @@ export const updatePets = async (req, res) => {
 
 export const deletePet = async (req, res) => {
     try {
-        const isValid = idValidation.validate(req.body);
+        const isValid = idValidation.validate(req.query);
         if (isValid.error) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: isValid.error.details[0].message });
         }
-        const { id } = req.body;
+        const { id } = req.query;
 
         if (!isValidObjectId(id)) {
             return res.status(HTTP_STATUS.ERROR).json({ status: RES_STATUS.FAILURE, message: "Invalid id passed" });
@@ -128,6 +128,7 @@ export const getAllPets = async (req, res) => {
                     name: 1,
                     breed: 1,
                     age: 1,
+                    status: 1,
                 }
             },
             {
@@ -141,6 +142,7 @@ export const getAllPets = async (req, res) => {
                     name: 1,
                     breed: 1,
                     age: 1,
+                    status: 1,
                 }
             },
             {
